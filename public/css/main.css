@@ -1,0 +1,14 @@
+.guest-admin{
+   background-image: url("../images/minierp-login.jpg");
+}
+.login-box{
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.login-btn{
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
