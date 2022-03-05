@@ -1,5 +1,12 @@
+a{
+    color: inherit!important;
+}
+body{
+    font-family: Bahnschrift!important;
+}
 .guest-admin{
    background-image: url("../images/minierp-login.jpg");
+    background-size: cover;
 }
 .login-box{
     max-width: 650px;
@@ -11,4 +18,28 @@
     margin-right: auto;
     display: block;
 }
-
+.mw-80px{
+    max-width: 80px;
+}
+.logo-padding{
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
+}
+.strongLabel{
+    background: #323BC2;
+    width: max-content;
+    color: white;
+    padding-left: 7px;
+    padding-right: 7px;
+    border-radius: 5px;
+}
+.dTable ul{
+    display: inline-flex;
+}
+.dTable ul li{
+    margin-right: 3px;
+}
+.redtext{
+    color: #dc3545 !important;
+}

@@ -7,7 +7,13 @@
 require('./bootstrap');
 
 window.Vue = require('vue').default;
-
+import jQuery from 'jquery'
+import Buefy from 'buefy';
+import Raphael from 'raphael/raphael'
+global.Raphael = Raphael
+import { AreaChart } from 'vue-morris'
+import 'buefy/dist/buefy.css';
+import VueResource from 'vue-resource'
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -18,8 +24,13 @@ window.Vue = require('vue').default;
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
-
+Vue.use(Buefy, {
+    defaultIconPack: 'fas'
+});
+Vue.use(VueResource);
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('home-component', require('./components/HomeComponent.vue').default);
+Vue.component('client-component', require('./components/ClientComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

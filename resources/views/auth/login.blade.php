@@ -1,11 +1,13 @@
 @extends('layouts.app')
-
+<?php
+checkAccess();
+?>
 @section('content')
 <div class="container">
     <div class="row justify-content-center login-box">
         <div class="col-md-8">
             <div class="card text-center">
-                miniERP
+                <img src="../images/logo.png" class="mw-80px logo-padding" alt="rawpixel.com">
             </div>
         </div>
         <div class="col-md-8">
@@ -20,7 +22,7 @@
                             <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email') }}</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                                <input id="email" autocomplete="off" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
 
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
@@ -31,7 +33,7 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Hasło') }}</label>
+                            <label for="password" autocomplete="off" class="col-md-4 col-form-label text-md-end">{{ __('Hasło') }}</label>
 
                             <div class="col-md-6">
                                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
