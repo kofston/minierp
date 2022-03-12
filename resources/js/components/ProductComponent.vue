@@ -34,7 +34,7 @@
                         <section>
                             <table class="dTable table">
                                 <thead>
-                                    <tr><th>Lp.</th><th>Nazwa</th><th>Utworzono</th><th>Edytowano</th><th>Opcje</th></tr>
+                                <tr><th>Lp.</th><th>Nazwa</th><th>Utworzono</th><th>Edytowano</th><th>Opcje</th></tr>
                                 </thead>
                                 <tbody>
                                 </tbody>
@@ -65,7 +65,7 @@ export default {
                     "aLengthMenu": [[15, 25, 50], [15, 25, 50]],
                     "iDisplayLength": 15,
                     "ajax": {
-                        "url": "/client/get_list",
+                        "url": "/product/get_list",
                         "type": "POST"
                     },
                     "columnDefs": [{ "targets": [], "orderable": false, }],

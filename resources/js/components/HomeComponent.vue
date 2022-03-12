@@ -12,7 +12,7 @@
                         <a href="/client" class="p-0" title="Klienci"><b-menu-item icon="user" label="Klienci"></b-menu-item></a>
                     </b-menu-list>
                     <b-menu-list >
-                        <a href="/product" class="p-0" title="Produkty"><b-menu-item icon="box" label="Produkty"></b-menu-item></a>
+                        <a href="/product" class="p-0" title="Produkty"><b-menu-item icon="folder" label="Produkty"></b-menu-item></a>
                     </b-menu-list>
                     <b-menu-list>
                         <a href="/order" class="p-0" title="Zamówienia"><b-menu-item icon="box" label="Zamówienia"></b-menu-item></a>
@@ -22,6 +22,9 @@
                     </b-menu-list>
                     <b-menu-list>
                         <a href="/helpdesk" class="p-0" title="HelpDesk"><b-menu-item icon="info" label="Help Desk"></b-menu-item></a>
+                    </b-menu-list>
+                    <b-menu-list>
+                        <a href="/offer" class="p-0" title="Oferty"><b-menu-item icon="tag" label="Oferty"></b-menu-item></a>
                     </b-menu-list>
                 </b-menu>
             </div>

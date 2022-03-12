@@ -31,6 +31,11 @@ Vue.use(VueResource);
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('home-component', require('./components/HomeComponent.vue').default);
 Vue.component('client-component', require('./components/ClientComponent.vue').default);
+Vue.component('product-component', require('./components/ProductComponent.vue').default);
+Vue.component('order-component', require('./components/OrderComponent.vue').default);
+Vue.component('delivery-component', require('./components/DeliveryComponent.vue').default);
+Vue.component('helpdesk-component', require('./components/HelpdeskComponent.vue').default);
+Vue.component('offer-component', require('./components/OfferComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
