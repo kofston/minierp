@@ -29,8 +29,12 @@ Vue.use(Buefy, {
 });
 Vue.use(VueResource);
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('header-component', require('./components/HeaderComponent.vue').default);
 Vue.component('home-component', require('./components/HomeComponent.vue').default);
+
 Vue.component('client-component', require('./components/ClientComponent.vue').default);
+Vue.component('clientadd-component', require('./components/ClientAddComponent.vue').default);
+
 Vue.component('product-component', require('./components/ProductComponent.vue').default);
 Vue.component('order-component', require('./components/OrderComponent.vue').default);
 Vue.component('delivery-component', require('./components/DeliveryComponent.vue').default);

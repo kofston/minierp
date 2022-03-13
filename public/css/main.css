@@ -43,3 +43,9 @@ body{
 .redtext{
     color: #dc3545 !important;
 }
+hr{
+    background-color: grey!important;
+}
+.desc-add h2{
+    font-size: 20px;
+}

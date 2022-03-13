@@ -23,6 +23,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::get('/client', [App\Http\Controllers\ClientController::class, 'index'])->name('client');
 Route::post('/client/get_list', [App\Http\Controllers\ClientController::class, 'get_list'])->name('client/get_list');
+Route::get('/client/add/{id?}', [App\Http\Controllers\ClientController::class, 'add'])->name('client/add');
+Route::post('/client/save/{id?}', [App\Http\Controllers\ClientController::class, 'save'])->name('client/save');
+Route::post('/client/delete/{id?}', [App\Http\Controllers\ClientController::class, 'delete'])->name('delete/save');
 
 Route::get('/product', [App\Http\Controllers\ProductController::class, 'index'])->name('product');
 Route::post('/product/get_list', [App\Http\Controllers\ProductController::class, 'get_list'])->name('product/get_list');

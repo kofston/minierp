@@ -11,6 +11,16 @@ class Client extends Model
     public $column_order = array('client.client_id','client.name','client.c_date','client.e_date');
     public $order = array('client.c_date' => 'desc');
 
+    function get_details($id)
+    {
+        if(!is_null($id))
+            $query = DB::table('client')->where(['status'=>'1','client_id'=>$id])->get();
+        else
+            $query = array();
+
+        return $query;
+    }
+
     function _get_datatables_query()
     {
         $request = Request::instance();
