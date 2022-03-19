@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Client extends Model
 {
-    public $column_search = array('client.client_id','client.name','client.c_date','client.e_date');
+    public $column_search = array('client.client_id','client.name','client.symbol','client.c_date','client.e_date');
     public $column_order = array('client.client_id','client.name','client.c_date','client.e_date');
     public $order = array('client.c_date' => 'desc');
 

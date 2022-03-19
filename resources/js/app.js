@@ -33,12 +33,21 @@ Vue.component('header-component', require('./components/HeaderComponent.vue').de
 Vue.component('home-component', require('./components/HomeComponent.vue').default);
 
 Vue.component('client-component', require('./components/ClientComponent.vue').default);
-Vue.component('clientadd-component', require('./components/ClientAddComponent.vue').default);
+Vue.component('clientadd-component', require('./components/add/ClientAddComponent.vue').default);
 
 Vue.component('product-component', require('./components/ProductComponent.vue').default);
+Vue.component('productadd-component', require('./components/add/ProductAddComponent.vue').default);
+
 Vue.component('order-component', require('./components/OrderComponent.vue').default);
+Vue.component('orderadd-component', require('./components/add/OrderAddComponent.vue').default);
+
+
 Vue.component('delivery-component', require('./components/DeliveryComponent.vue').default);
+
+
 Vue.component('helpdesk-component', require('./components/HelpdeskComponent.vue').default);
+
+
 Vue.component('offer-component', require('./components/OfferComponent.vue').default);
 
 /**

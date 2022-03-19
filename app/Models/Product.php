@@ -7,10 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    public $column_search = array('product.product_id','product.name','product.c_date','product.e_date');
+    public $column_search = array('product.product_id','product.name','product.symbol','product.c_date','product.e_date');
     public $column_order = array('product.product_id','product.name','product.c_date','product.e_date');
     public $order = array('product.c_date' => 'desc');
 
+    function get_details($id)
+    {
+        if(!is_null($id))
+            $query = DB::table('product')->where(['status'=>'1','product_id'=>$id])->get();
+        else
+            $query = array();
+
+        return $query;
+    }
     function _get_datatables_query()
     {
         $request = Request::instance();

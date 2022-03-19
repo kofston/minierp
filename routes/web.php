@@ -29,9 +29,15 @@ Route::post('/client/delete/{id?}', [App\Http\Controllers\ClientController::clas
 
 Route::get('/product', [App\Http\Controllers\ProductController::class, 'index'])->name('product');
 Route::post('/product/get_list', [App\Http\Controllers\ProductController::class, 'get_list'])->name('product/get_list');
+Route::get('/product/add/{id?}', [App\Http\Controllers\ProductController::class, 'add'])->name('product/add');
+Route::post('/product/save/{id?}', [App\Http\Controllers\ProductController::class, 'save'])->name('product/save');
+Route::post('/product/delete/{id?}', [App\Http\Controllers\ProductController::class, 'delete'])->name('product/save');
 
 Route::get('/order', [App\Http\Controllers\OrderController::class, 'index'])->name('order');
 Route::post('/order/get_list', [App\Http\Controllers\OrderController::class, 'get_list'])->name('order/get_list');
+Route::get('/order/add/{id?}', [App\Http\Controllers\OrderController::class, 'add'])->name('order/add');
+Route::post('/order/save/{id?}', [App\Http\Controllers\OrderController::class, 'save'])->name('order/save');
+Route::post('/order/switch_status/{id?}', [App\Http\Controllers\OrderController::class, 'switch_status'])->name('order/switch_status');
 
 Route::get('/delivery', [App\Http\Controllers\DeliveryController::class, 'index'])->name('delivery');
 Route::post('/delivery/get_list', [App\Http\Controllers\DeliveryController::class, 'get_list'])->name('delivery/get_list');

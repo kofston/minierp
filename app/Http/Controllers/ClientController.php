@@ -46,6 +46,8 @@ class ClientController extends Controller
             'country'=>$_POST['country'],
             'email'=>$_POST['email'],
             'phone'=>$_POST['phone'],
+            'rabate'=>$_POST['rabate'],
+            'note'=>$_POST['note'],
             'e_by'=>((Auth::id())?Auth::id():'0'),
         );
 
@@ -57,8 +59,6 @@ class ClientController extends Controller
         }
         else
         {
-            $count_all = DB::table('client')->count();
-           $insert_data['symbol'] = $count_all."_".time();
             DB::table('client')->insert($insert_data);
             return redirect('/client?msg=success_insert');
         }
@@ -83,7 +83,7 @@ class ClientController extends Controller
             $row_id = $qry->client_id;
             $row = array("DT_RowId"=>'client_'.$row_id, 'DT_RowClass'=>'client_tr');
             $row[] = $j++;
-            $row[] = '<div class="strongLabel" ><a href="/client/add/'.$row_id.'">'.$qry->name.'</a></div>';
+            $row[] = '<div class="strongLabel" ><a href="/client/add/'.$row_id.'">'.$qry->name.'</a></div><small>'.$qry->symbol.'</small> '.(($qry->rabate!='0')?'<i class="fas fa-dollar-sign redtext" data-toggle="tooltip" data-placement="top" title="'.$qry->rabate.'%"></i>':'').(($qry->note!='')?' <i class="fas fa-comment bluetext" data-toggle="tooltip" data-placement="top" title="'.$qry->note.'"></i>':'');
             $row[] = $qry->c_date;
             $row[] = $qry->e_date.(($qry->e_by!='0')?'<br>':'');
             $row[] = '<ul><li><a title="Edytuj" href="/client/add/'.$row_id.'">&#9998;</a></li><li><a class="redtext delete_row" title="Usuń" data-module="client" data-id="'.$row_id.'" href="javascript:void(0);">&#10006;</a></li></ul>';

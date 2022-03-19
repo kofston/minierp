@@ -51,6 +51,9 @@ export default {
                     "columnDefs": [{ "targets": [], "orderable": false, }],
                     "drawCallback": function( settings ) {
                         that.initDelete();
+                        $(function () {
+                            $('[data-toggle="tooltip"]').tooltip()
+                        })
                     },
                 });
             } );

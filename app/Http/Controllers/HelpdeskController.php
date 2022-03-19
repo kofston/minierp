@@ -16,6 +16,7 @@ class HelpdeskController extends Controller
         $this->module='helpdesk';
         $this->baseview='helpdesk';
         $this->middleware('auth');
+        $this->middleware('hooks');
     }
     public function index()
     {

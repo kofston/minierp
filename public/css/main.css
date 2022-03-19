@@ -43,6 +43,15 @@ body{
 .redtext{
     color: #dc3545 !important;
 }
+.bluetext{
+    color: #007bff !important;
+}
+.greentext{
+    color: #28a745 !important;
+}
+.purpletext{
+    color: rgba(178,60,253,1) !important;
+}
 hr{
     background-color: grey!important;
 }

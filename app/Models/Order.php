@@ -7,14 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    public $column_search = array('order.order_id','order.name','order.c_date','order.e_date');
-    public $column_order = array('order.order_id','order.name','order.c_date','order.e_date');
-    public $order = array('order.c_date' => 'desc');
+    public $column_search = array('orders.order_id','orders.order_ident','orders.c_date','orders.e_date','orders.order_status');
+    public $column_order = array('orders.order_id','orders.order_ident','orders.c_date','orders.e_date');
+    public $order = array('orders.c_date' => 'desc');
 
+    function get_details($id)
+    {
+        if(!is_null($id))
+            $query = DB::table('orders')->where(['status'=>'1','order_id'=>$id])->get();
+        else
+            $query = array();
+
+        return $query;
+    }
     function _get_datatables_query()
     {
         $request = Request::instance();
-        $query = DB::table('order')->where(['status'=>'1']);
+        $query = DB::table('orders')->where(['status'=>'1']);
 //        ## SEARCH DATATABLE
         $search = $request->post('search');
         $i = 0;
@@ -62,7 +71,7 @@ class Order extends Model
 
     public function count_all()
     {
-        $query = DB::table('order')->where(['status'=>'1'])->count();
+        $query = DB::table('orders')->where(['status'=>'1'])->count();
         return $query;
     }
 }

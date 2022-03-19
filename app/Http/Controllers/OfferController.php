@@ -16,6 +16,7 @@ class OfferController extends Controller
         $this->module='offer';
         $this->baseview='offer';
         $this->middleware('auth');
+        $this->middleware('hooks');
     }
     public function index()
     {

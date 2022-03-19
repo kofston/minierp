@@ -13,6 +13,7 @@ class HomeController extends Controller
         $this->module='home';
         $this->baseview='home';
         $this->middleware('auth');
+        $this->middleware('hooks');
     }
 
     public function index()

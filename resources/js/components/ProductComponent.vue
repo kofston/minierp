@@ -10,9 +10,10 @@
                 <div class="col-lg-9 p-0">
                     <div class="card p-2">
                         <section>
+                            <div class="d-flex mt-2 mb-3 justify-content-end text-light"><a href="/product/add" class="button is-success">Dodaj produkt</a></div>
                             <table class="dTable table">
                                 <thead>
-                                <tr><th>Lp.</th><th>Nazwa</th><th>Utworzono</th><th>Edytowano</th><th>Opcje</th></tr>
+                                <tr><th>Lp.</th><th>Nazwa</th><th>Cena/Jednostka</th><th>Utworzono</th><th>Edytowano</th><th>Opcje</th></tr>
                                 </thead>
                                 <tbody>
                                 </tbody>

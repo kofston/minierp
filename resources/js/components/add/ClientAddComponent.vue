@@ -11,6 +11,8 @@
                     <div class="card p-2">
                         <section>
                             <div class="desc-add">
+                                <a href="/client"><i class="fas fa-solid fa-backward"></i> Powrót</a>
+                                <hr>
                                 <h2>{{((this.name!='')?'Edycja klienta: '+this.name:'Dodawanie nowego klienta')}}</h2>
                                 <form class="mt-4" :action="`/client/save/${id}`" method="POST">
                                     <div class="form-group mb-2">
@@ -19,7 +21,7 @@
                                     </div>
                                     <div class="form-group mb-1">
                                         <label for="name">Symbol</label>
-                                        <input type="text" name="symbol" class="form-control" id="symbol" v-model="this.symbol" readonly placeholder="Wygenerowany automatycznie">
+                                        <input type="text" name="symbol" class="form-control" id="symbol" v-model="this.symbol"  placeholder="Wygenerowany automatycznie">
                                     </div>
                                     <hr>
                                     <div class="row mb-2">
@@ -61,6 +63,17 @@
                                             <label>Telefon</label>
                                             <input type="text" name="phone" class="form-control" v-model="this.phone" placeholder="Telefon" required>
                                         </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row mb-0">
+                                        <div class="col-md-6">
+                                            <label>Rabat</label>
+                                            <input type="number" min="0" max="99" step="1" name="rabate" class="form-control" v-model="this.rabate" placeholder="Rabat (domyślnie 0)" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Notatka</label>
+                                            <input type="text" name="note" class="form-control" v-model="this.note" placeholder="Notatka">
+                                        </div>
                                         <div class="col-md-12 mt-4">
                                             <button class="button is-success w-100">Zapisz</button>
                                         </div>
@@ -91,6 +104,8 @@ export default {
             country:'',
             email:'',
             phone:'',
+            rabate:'',
+            note:'',
             countriesArr:'',
         }
     },
@@ -117,6 +132,8 @@ export default {
             this.country = parseQuery[0].country;
             this.email = parseQuery[0].email;
             this.phone = parseQuery[0].phone;
+            this.rabate = parseQuery[0].rabate;
+            this.note = parseQuery[0].note;
         }
         this.countriesArr = '<option value="pl" '+((this.country=='pl')?'selected':'')+'>Polska</option><option value="gb" '+((this.country=='gb')?'selected':'')+'>Wielka Brytania</option><option value="de" '+((this.country=='de')?'selected':'')+'>Niemcy</option><option value="fr" '+((this.country=='fr')?'selected':'')+'>Francja</option>';
     },

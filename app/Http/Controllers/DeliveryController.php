@@ -16,6 +16,7 @@ class DeliveryController extends Controller
         $this->module='delivery';
         $this->baseview='delivery';
         $this->middleware('auth');
+        $this->middleware('hooks');
     }
     public function index()
     {
