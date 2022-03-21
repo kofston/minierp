@@ -37,13 +37,15 @@ Route::get('/order', [App\Http\Controllers\OrderController::class, 'index'])->na
 Route::post('/order/get_list', [App\Http\Controllers\OrderController::class, 'get_list'])->name('order/get_list');
 Route::get('/order/add/{id?}', [App\Http\Controllers\OrderController::class, 'add'])->name('order/add');
 Route::post('/order/save/{id?}', [App\Http\Controllers\OrderController::class, 'save'])->name('order/save');
-Route::post('/order/switch_status/{id?}', [App\Http\Controllers\OrderController::class, 'switch_status'])->name('order/switch_status');
+Route::post('/order/changeStatus/{id}/{status}', [App\Http\Controllers\OrderController::class, 'changeStatus'])->name('order/changeStatus');
 
 Route::get('/delivery', [App\Http\Controllers\DeliveryController::class, 'index'])->name('delivery');
 Route::post('/delivery/get_list', [App\Http\Controllers\DeliveryController::class, 'get_list'])->name('delivery/get_list');
 
 Route::get('/helpdesk', [App\Http\Controllers\HelpdeskController::class, 'index'])->name('helpdesk');
 Route::post('/helpdesk/get_list', [App\Http\Controllers\HelpdeskController::class, 'get_list'])->name('helpdesk/get_list');
+Route::get('/helpdesk/createticket/{id}', [App\Http\Controllers\HelpdeskController::class, 'createticket'])->name('helpdesk/createticket');
+Route::get('/helpdesk/chat/{id}/{hash?}', [App\Http\Controllers\HelpdeskController::class, 'chat'])->name('helpdesk/chat');
 
 Route::get('/offer', [App\Http\Controllers\OfferController::class, 'index'])->name('offer');
 Route::post('/offer/get_list', [App\Http\Controllers\OfferController::class, 'get_list'])->name('offer/get_list');

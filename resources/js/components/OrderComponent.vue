@@ -36,8 +36,9 @@ export default {
     },
     methods: {
         syncDataBase(){
+            let that = this;
             $(document).ready( function () {
-                $('.dTable').DataTable({
+             $('.dTable').DataTable({
                     "processing": true,
                     "serverSide": true,
                     "order": [],
@@ -49,14 +50,28 @@ export default {
                     },
                     "columnDefs": [{ "targets": [], "orderable": false, }],
                     "drawCallback": function( settings ) {
-
+                        that.changeStatus();
                     },
                 });
             } );
         },
+        changeStatus(){
+            let that = this;
+            $( ".order_status_select" ).change(function() {
+                let id = $(this).data("orderid"),new_status = $(this).val();
+                $.ajax({
+                    url: "/order/changeStatus/"+id+"/"+new_status,
+                    method:"POST",
+                    success: function( xhr ) {
+                        $(".dTable").DataTable().ajax.reload();
+                    }
+                });
+            });
+        },
     },
     mounted() {
         this.syncDataBase();
+        this.changeStatus();
     }
 
 }

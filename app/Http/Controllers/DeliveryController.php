@@ -38,9 +38,8 @@ class DeliveryController extends Controller
             $row_id = $qry->delivery_id;
             $row = array("DT_RowId"=>'delivery_'.$row_id, 'DT_RowClass'=>'delivery_tr');
             $row[] = $j++;
-            $row[] = '<div class="strongLabel" ><a href="/delivery/add/'.$row_id.'">'.$qry->name.'</a></div>';
-            $row[] = $qry->c_date;
-            $row[] = (($qry->e_date!='0000-00-00 00:00:00')?$qry->e_date:'-');
+            $row[] = '<div class="strongLabel" >'.$qry->order_ident.'</div>';
+            $row[] = (($qry->e_date!='0000-00-00 00:00:00')?$qry->c_date:'-');
             $row[] = '<ul><li><a title="Edytuj" href="/delivery/add/'.$row_id.'">&#9998;</a></li><li><a class="redtext" title="Usuń" href="/delivery/delete/'.$row_id.'">&#10006;</a></li></ul>';
 
             $data[] = $row;

@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Delivery extends Model
 {
-    public $column_search = array('delivery.delivery_id','delivery.name','delivery.c_date','delivery.e_date');
-    public $column_order = array('delivery.delivery_id','delivery.name','delivery.c_date','delivery.e_date');
+    public $column_search = array('delivery.delivery_id','delivery.order_id','delivery.c_date','delivery.status');
+    public $column_order = array('delivery.delivery_id','delivery.order_id','delivery.c_date','delivery.status');
     public $order = array('delivery.c_date' => 'desc');
 
     function _get_datatables_query()

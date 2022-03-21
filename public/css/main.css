@@ -58,3 +58,40 @@ hr{
 .desc-add h2{
     font-size: 20px;
 }
+select.order_style_-1{
+    background: #dc3545;
+    color: white;
+}
+select.order_style_0{
+    background: rgba(178,60,253,1);
+    color: white;
+}
+select.order_style_1{
+    background: #007bff;
+    color: white;
+}
+select.order_style_2{
+    background: grey;
+    color: white;
+}
+select.order_style_3{
+    background: #28a745;
+    color: white;
+}
+.discuss.open{
+    background: #28a745;
+    color: white;
+}
+.discuss.close{
+    background: #dc3545;
+    color: white;
+}
+.helpdesk_icon{
+    background: red;
+    padding: 6px;
+    color: white!important;
+    margin-top: 0px;
+    display: block;
+    padding-left: 10px;
+    padding-right: 10px;
+}

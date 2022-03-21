@@ -46,6 +46,8 @@ Vue.component('delivery-component', require('./components/DeliveryComponent.vue'
 
 
 Vue.component('helpdesk-component', require('./components/HelpdeskComponent.vue').default);
+Vue.component('helpdeskerror-component', require('./components/other/HelpdeskerrorComponent.vue').default);
+Vue.component('helpdeskchat-component', require('./components/other/HelpdeskchatComponent.vue').default);
 
 
 Vue.component('offer-component', require('./components/OfferComponent.vue').default);

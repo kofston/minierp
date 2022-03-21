@@ -11,10 +11,20 @@ class Helpdesk extends Model
     public $column_order = array('helpdesk.helpdesk_id','helpdesk.name','helpdesk.c_date','helpdesk.e_date');
     public $order = array('helpdesk.c_date' => 'desc');
 
+    function get_details($id)
+    {
+        if(!is_null($id))
+            $query = DB::table('helpdesk')->select('helpdesk.*','orders.order_ident')->leftJoin('orders', 'helpdesk.order_id', '=', 'helpdesk.order_id')->where(['helpdesk.status'=>'1','helpdesk_id'=>$id])->get();
+        else
+            $query = array();
+
+        return $query;
+    }
+
     function _get_datatables_query()
     {
         $request = Request::instance();
-        $query = DB::table('helpdesk')->where(['status'=>'1']);
+        $query = DB::table('helpdesk')->select('helpdesk.*','orders.order_ident')->leftJoin('orders', 'helpdesk.order_id', '=', 'helpdesk.order_id')->where(['helpdesk.status'=>'1']);
 //        ## SEARCH DATATABLE
         $search = $request->post('search');
         $i = 0;

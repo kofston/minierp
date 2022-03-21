@@ -3,8 +3,8 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/home') }}">
-                    <img src="../images/logo.png" class="mw-80px" alt="rawpixel.com">
+                <a class="navbar-brand" href="{{ ((!strpos($_SERVER['REQUEST_URI'], "/chat/"))?url('/home'):'#') }}">
+                    <img src="/images/logo.png" class="mw-80px" alt="rawpixel.com">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -20,7 +20,7 @@
                     <ul class="navbar-nav ms-auto">
                         <!-- Authentication Links -->
                         @guest
-                            @if (Route::has('login'))
+                            @if (Route::has('login') && (!strpos($_SERVER['REQUEST_URI'], "/chat/")) )
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('login') }}">{{ __('Zaloguj się') }}</a>
                                 </li>
