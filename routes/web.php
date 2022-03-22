@@ -46,6 +46,8 @@ Route::get('/helpdesk', [App\Http\Controllers\HelpdeskController::class, 'index'
 Route::post('/helpdesk/get_list', [App\Http\Controllers\HelpdeskController::class, 'get_list'])->name('helpdesk/get_list');
 Route::get('/helpdesk/createticket/{id}', [App\Http\Controllers\HelpdeskController::class, 'createticket'])->name('helpdesk/createticket');
 Route::get('/helpdesk/chat/{id}/{hash?}', [App\Http\Controllers\HelpdeskController::class, 'chat'])->name('helpdesk/chat');
+Route::post('/helpdesk/add_message/{id}', [App\Http\Controllers\HelpdeskController::class, 'add_message'])->name('helpdesk/add_message');
+Route::get('/helpdesk/refresh_chat/{id}', [App\Http\Controllers\HelpdeskController::class, 'refresh_chat'])->name('helpdesk/refresh_chat');
 
 Route::get('/offer', [App\Http\Controllers\OfferController::class, 'index'])->name('offer');
 Route::post('/offer/get_list', [App\Http\Controllers\OfferController::class, 'get_list'])->name('offer/get_list');

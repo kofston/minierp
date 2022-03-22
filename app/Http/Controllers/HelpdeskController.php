@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 use App\Models\Helpdesk;
+use Illuminate\Support\Facades\Auth;
 use Request;
 
 class HelpdeskController extends Controller
@@ -77,6 +78,69 @@ class HelpdeskController extends Controller
 
         echo json_encode($output);
 
+    }
+    public function refresh_chat($id=NULL)
+    {
+        if(isset($id))
+        {
+            $check_Exist = DB::table('helpdesk_messages')->where(['helpdesk_id'=>$id])->get();
+            if(count($check_Exist)>0)
+            {
+                $usrs = DB::table('users')->get();
+                $usrs_arr = array();
+                foreach ($usrs as $usr)
+                    $usrs_arr[$usr->id] = $usr->name;
+
+                $messages_content = '';
+                foreach ($check_Exist as $ce)
+                {
+                    if($ce->c_by!='0')
+                    {
+
+                        $messages_content.='  <div class="message_block">
+                                    <div class="message_right">
+                                        <small>'.date('d/M/Y H:i:s',strtotime($ce->c_date)).((isset($usrs_arr[$ce->c_by]))?' ('.$usrs_arr[$ce->c_by].') ':'').'</small><br>
+                                        '.$ce->message.'
+                                    </div>
+                                </div>';
+                    }
+                    else
+                    {
+                        $messages_content.='  <div class="message_block">
+                                    <div class="message_left">
+                                        <small>'.date('d/M/Y H:i:s',strtotime($ce->c_date)).'</small><br>
+                                        '.$ce->message.'
+                                    </div>
+                                </div>';
+                    }
+                }
+                echo $messages_content;
+            }
+            else
+                echo 'Brak wiadomości';
+//            $insert_data = array(
+//                'helpdesk_id'=>$id,
+//                'message'=>$_POST['message'],
+//                'c_date'=>date('Y-m-d H:i:s'),
+//                'c_by'=>((Auth::id())?Auth::id():'0'),
+//                'status'=>'1',
+//            );
+//            DB::table('helpdesk_messages')->insert($insert_data);
+        }
+    }
+    public function add_message($id=NULL)
+    {
+        if(isset($id) && isset($_POST['message']))
+        {
+            $insert_data = array(
+                'helpdesk_id'=>$id,
+                'message'=>$_POST['message'],
+                'c_date'=>date('Y-m-d H:i:s'),
+                'c_by'=>((Auth::id())?Auth::id():'0'),
+                'status'=>'1',
+            );
+            DB::table('helpdesk_messages')->insert($insert_data);
+        }
     }
     public function chat($helpdesk_id = NULL,$hash='')
     {

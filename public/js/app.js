@@ -6434,10 +6434,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "HelpdeskchatComponent",
   data: function data() {
     return {
+      helpdesk_id: '',
       order_ident: ''
     };
   },
@@ -6447,12 +6456,55 @@ __webpack_require__.r(__webpack_exports__);
       required: false
     }
   },
+  methods: {
+    sendMessage: function sendMessage() {
+      var that = this;
+      $("#add_message").unbind().click(function () {
+        var id = $(this).data("helpdesk"),
+            message = $(".message_text").val();
+
+        if (message != '') {
+          $.ajax({
+            url: "/helpdesk/add_message/" + id,
+            data: {
+              message: message
+            },
+            method: "POST",
+            success: function success(xhr) {
+              console.log(xhr);
+              that.refreshChat();
+            }
+          });
+        } else alert("Brak treści wiadomości!");
+      });
+    },
+    refreshChat: function refreshChat() {
+      var id = this.helpdesk_id,
+          that = this;
+      $.ajax({
+        url: "/helpdesk/refresh_chat/" + id,
+        method: "GET",
+        success: function success(xhr) {
+          $("#discuss").html(xhr);
+        }
+      });
+    }
+  },
   beforeMount: function beforeMount() {
     var parseQuery = JSON.parse(this.$props.query);
 
     if (parseQuery.length > 0) {
+      this.helpdesk_id = parseQuery[0].helpdesk_id;
       this.order_ident = parseQuery[0].order_ident;
     }
+  },
+  mounted: function mounted() {
+    var that = this;
+    this.sendMessage();
+    that.refreshChat();
+    var intervalId = window.setInterval(function () {
+      that.refreshChat();
+    }, 10000);
   }
 });
 
@@ -71760,14 +71812,46 @@ var render = function () {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "card p-2 mt-4" }, [
-            _vm._v("\n                    Moja dyskusja\n                "),
+            _c("span", { staticClass: "text-center" }, [
+              _vm._v("Moja dyskusja"),
+            ]),
+            _vm._v(" "),
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", [
+              _c("label", [_vm._v("Napisz wiadomość")]),
+              _vm._v(" "),
+              _c("textarea", { staticClass: "form-control message_text" }),
+              _vm._v(" "),
+              _c(
+                "a",
+                {
+                  staticClass: "btn btn-primary d-block text-white mt-2",
+                  attrs: {
+                    href: "javascript:void(0);",
+                    id: "add_message",
+                    "data-helpdesk": _vm.helpdesk_id,
+                  },
+                },
+                [_vm._v("Wyślij wiadomość")]
+              ),
+            ]),
           ]),
         ]),
       ]),
     ]),
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "messages_container" }, [
+      _c("div", { attrs: { id: "discuss" } }),
+    ])
+  },
+]
 render._withStripped = true
 
 
