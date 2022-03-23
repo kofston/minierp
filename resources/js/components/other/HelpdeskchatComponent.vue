@@ -16,7 +16,7 @@
                         <div>
                             <label>Napisz wiadomość</label>
                             <textarea class="form-control message_text"></textarea>
-                            <a href="javascript:void(0);" class="btn btn-primary d-block text-white mt-2" id="add_message" :data-helpdesk="helpdesk_id">Wyślij wiadomość</a>
+                            <a href="javascript:void(0);" class="btn btn-primary d-block text-white mt-2" id="add_message" :data-helpdesk="helpdesk_id">Wyślij wiadomość / Send message</a>
                         </div>
                     </div>
                 </div>

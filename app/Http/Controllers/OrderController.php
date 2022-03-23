@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Delivery;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 use App\Models\Order;
@@ -122,10 +123,9 @@ class OrderController extends Controller
             case 2:
                 break;
             case 3:
-
+                $DeliveryModel = new Delivery;
+                $create_package = $DeliveryModel->add_package($orderId);
                 break;
-
-
         }
 
         DB::table('orders')->where(['order_id'=>$orderId])->update($insert_data);

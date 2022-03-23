@@ -64,6 +64,8 @@ export default {
                     method:"POST",
                     success: function( xhr ) {
                         $(".dTable").DataTable().ajax.reload();
+                        if(new_status == '3')
+                            location.replace('/delivery');
                     }
                 });
             });

@@ -1,1 +1,1 @@
-{"1":{"product_id":1,"name":"Folia stretch 0.5qm","symbol":"FS05","unit":"kg","price":"43.67","c_date":"2022-03-19 09:10:04","e_date":"2022-03-19 09:10:04","e_by":3,"status":"1"}}
+{"1":{"product_id":1,"name":"Folia stretch 0.5qm","symbol":"FS05","unit":"kg","price":"43.67","c_date":"2022-03-23 18:36:27","e_date":"2022-03-23 18:36:27","e_by":3,"status":"1"}}

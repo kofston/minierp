@@ -25,13 +25,13 @@ Route::get('/client', [App\Http\Controllers\ClientController::class, 'index'])->
 Route::post('/client/get_list', [App\Http\Controllers\ClientController::class, 'get_list'])->name('client/get_list');
 Route::get('/client/add/{id?}', [App\Http\Controllers\ClientController::class, 'add'])->name('client/add');
 Route::post('/client/save/{id?}', [App\Http\Controllers\ClientController::class, 'save'])->name('client/save');
-Route::post('/client/delete/{id?}', [App\Http\Controllers\ClientController::class, 'delete'])->name('delete/save');
+Route::post('/client/delete/{id?}', [App\Http\Controllers\ClientController::class, 'delete'])->name('client/delete');
 
 Route::get('/product', [App\Http\Controllers\ProductController::class, 'index'])->name('product');
 Route::post('/product/get_list', [App\Http\Controllers\ProductController::class, 'get_list'])->name('product/get_list');
 Route::get('/product/add/{id?}', [App\Http\Controllers\ProductController::class, 'add'])->name('product/add');
 Route::post('/product/save/{id?}', [App\Http\Controllers\ProductController::class, 'save'])->name('product/save');
-Route::post('/product/delete/{id?}', [App\Http\Controllers\ProductController::class, 'delete'])->name('product/save');
+Route::post('/product/delete/{id?}', [App\Http\Controllers\ProductController::class, 'delete'])->name('product/delete');
 
 Route::get('/order', [App\Http\Controllers\OrderController::class, 'index'])->name('order');
 Route::post('/order/get_list', [App\Http\Controllers\OrderController::class, 'get_list'])->name('order/get_list');
@@ -41,6 +41,10 @@ Route::post('/order/changeStatus/{id}/{status}', [App\Http\Controllers\OrderCont
 
 Route::get('/delivery', [App\Http\Controllers\DeliveryController::class, 'index'])->name('delivery');
 Route::post('/delivery/get_list', [App\Http\Controllers\DeliveryController::class, 'get_list'])->name('delivery/get_list');
+Route::get('/delivery/send_package/{id}', [App\Http\Controllers\DeliveryController::class, 'send_package'])->name('delivery/send_package');
+Route::get('/delivery/get_label/{id}', [App\Http\Controllers\DeliveryController::class, 'get_label'])->name('delivery/get_label');
+Route::get('/delivery/delete/{id?}/{deliverynumb?}', [App\Http\Controllers\DeliveryController::class, 'delete'])->name('delivery/delete');
+
 
 Route::get('/helpdesk', [App\Http\Controllers\HelpdeskController::class, 'index'])->name('helpdesk');
 Route::post('/helpdesk/get_list', [App\Http\Controllers\HelpdeskController::class, 'get_list'])->name('helpdesk/get_list');

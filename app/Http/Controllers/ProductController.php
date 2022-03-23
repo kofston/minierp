@@ -44,6 +44,9 @@ class ProductController extends Controller
             'status'=>'1',
         );
 
+        if(file_exists('cache/products.php'))
+            unlink('cache/products.php');
+
         if(isset($id) && $id!='')
         {
             $insert_data['e_date'] = date('Y-m-d H:i:s');
@@ -62,6 +65,9 @@ class ProductController extends Controller
     {
         if(isset($id))
             DB::table('product')->where(['product_id'=>$id])->update(['status'=>'0','e_date'=>date('Y-m-d H:i:s'),'e_by'=>((Auth::id())?Auth::id():'0')]);
+
+        if(file_exists('cache/products.php'))
+            unlink('cache/products.php');
     }
     public function get_list($page = 1)
     {

@@ -5875,6 +5875,7 @@ __webpack_require__.r(__webpack_exports__);
           method: "POST",
           success: function success(xhr) {
             $(".dTable").DataTable().ajax.reload();
+            if (new_status == '3') location.replace('/delivery');
           }
         });
       });
@@ -71833,7 +71834,7 @@ var render = function () {
                     "data-helpdesk": _vm.helpdesk_id,
                   },
                 },
-                [_vm._v("Wyślij wiadomość")]
+                [_vm._v("Wyślij wiadomość / Send message")]
               ),
             ]),
           ]),

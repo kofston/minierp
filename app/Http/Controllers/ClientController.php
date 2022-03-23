@@ -51,6 +51,9 @@ class ClientController extends Controller
             'e_by'=>((Auth::id())?Auth::id():'0'),
         );
 
+        if(file_exists('cache/clients.php'))
+            unlink('cache/clients.php');
+
         if(isset($id) && $id!='')
         {
             $insert_data['e_date'] = date('Y-m-d H:i:s');
@@ -68,6 +71,9 @@ class ClientController extends Controller
     {
         if(isset($id))
             DB::table('client')->where(['client_id'=>$id])->update(['status'=>'0','e_date'=>date('Y-m-d H:i:s'),'e_by'=>((Auth::id())?Auth::id():'0')]);
+
+        if(file_exists('cache/clients.php'))
+            unlink('cache/clients.php');
     }
     public function get_list($page = 1)
     {
