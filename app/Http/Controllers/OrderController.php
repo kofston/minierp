@@ -8,6 +8,9 @@ use DB;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 use Request;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
 class OrderController extends Controller
 {
@@ -113,20 +116,92 @@ class OrderController extends Controller
             'order_status'=>(string)$newStatus,
         );
 
-        switch ($newStatus){
-            case -1:
-                break;
-            case 0:
-                break;
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                $DeliveryModel = new Delivery;
-                $create_package = $DeliveryModel->add_package($orderId);
-                break;
-        }
+       $Q = DB::table('orders')->select('orders.order_id','orders.order_ident','orders.products','client.*')->leftJoin('client', 'orders.client_id', '=', 'client.client_id')->where(['orders.status'=>'1','order_id'=>$orderId])->get();
+       if(count($Q)>0)
+       {
+           $products = json_decode($Q[0]->products);
+           $table_prod='<table cellpadding=\'2\' border=\'1\' width=\'800px;\'><tr><td style="text-align: center;font-family: Bahnschrift;background: white;height: 45px;font-size: 17px;">Produkt</td><td style="text-align: center;font-family: Bahnschrift;background: white;height: 45px;font-size: 17px;">Ilość</td><td style="text-align: center;font-family: Bahnschrift;background: white;height: 45px;font-size: 17px;">Cena</td></tr>';
+
+           for($i=0;$i<count($products->id);$i++)
+           {
+               $table_prod .='<tr>';
+               $hlp_prod = 0;
+               foreach ($products as $prod_K=>$prod_VAL)
+               {
+                   switch ($hlp_prod)
+                   {
+                       case 1:
+                           $table_prod.='<td style="text-align: center;font-family: Bahnschrift;background: white;height: 45px;font-size: 17px;">'.$products->{$prod_K}[$i].'</td>';
+                           break;
+                       case 2:
+                           $table_prod.='<td style="text-align: center;font-family: Bahnschrift;background: white;height: 45px;font-size: 17px;">'.$products->{$prod_K}[$i].'</td>';
+                           break;
+                       case 3:
+                           $table_prod.='<td style="text-align: center;font-family: Bahnschrift;background: white;height: 45px;font-size: 17px;">'.$products->{$prod_K}[$i].' zł</td>';
+                           break;
+                   }
+                   $hlp_prod++;
+               }
+               $table_prod.='</tr>';
+           }
+           $table_prod.='</table>';
+
+           switch ($newStatus){
+               case -1:
+                   break;
+               case 1:
+                   $BodyEmail = "<table width='800px;'>
+            <tr><td style='background:#f2f2f2;box-shadow:3px 7px 5px 4px lightgray inset; text-align: center;font-size: 25px;text-align: center;font-family: Bahnschrift;'>miniERP System</td></tr>
+            <tr><td style='text-align: center;font-family: Bahnschrift;background: white;height: 150px;font-size: 19px;padding-right: 40px;padding-left: 40px;'>Państwa zamówienie (".$Q[0]->order_ident.") zmieniło status na: Nowe / The new status of your order (".$Q[0]->order_ident.") is: New</td></tr>
+            </table>
+                ".$table_prod."
+            <table width='800px;'>
+            <tr><td style='height:50px;background:#323BC2;color:white;text-align: left;font-family: Bahnschrift;padding: 5px;box-shadow:-4px -3px 9px 2px whitesmoke inset;'>miniERP - ".date('Y')."</td></tr>
+            </table>";
+                send_mail($Q[0]->email,"miniErp - Nowe zamówienie : ".$Q[0]->order_ident,$BodyEmail);
+                   break;
+               case 2:
+                   $BodyEmail = "<table width='800px;'>
+            <tr><td style='background:#f2f2f2;box-shadow:3px 7px 5px 4px lightgray inset; text-align: center;font-size: 25px;text-align: center;font-family: Bahnschrift;'>miniERP System</td></tr>
+            <tr><td style='text-align: center;font-family: Bahnschrift;background: white;height: 150px;font-size: 19px;padding-right: 40px;padding-left: 40px;'>Państwa zamówienie (".$Q[0]->order_ident.") zmieniło status na: W realizacji / The new status of your order (".$Q[0]->order_ident.") is: In progress</td></tr>
+            </table>
+               ".$table_prod."
+            <table width='800px;'>
+            <tr><td style='height:50px;background:#323BC2;color:white;text-align: left;font-family: Bahnschrift;padding: 5px;box-shadow:-4px -3px 9px 2px whitesmoke inset;'>miniERP - ".date('Y')."</td></tr>
+            </table>";
+                   send_mail($Q[0]->email,"miniErp - Zamówienie przekazane do realizacji : ".$Q[0]->order_ident,$BodyEmail);
+                   break;
+               case 3:
+                 if($Q[0]->deliver_id>0)
+                 {
+                     $BodyEmail = "<table width='800px;'>
+            <tr><td style='background:#f2f2f2;box-shadow:3px 7px 5px 4px lightgray inset; text-align: center;font-size: 25px;text-align: center;font-family: Bahnschrift;'>miniERP System</td></tr>
+            <tr><td style='text-align: center;font-family: Bahnschrift;background: white;height: 150px;font-size: 19px;padding-right: 40px;padding-left: 40px;'>Państwa zamówienie (".$Q[0]->order_ident.") zmieniło status na: Wysłane / The new status of your order (".$Q[0]->order_ident.") is: Send</td></tr>
+            </table>
+                ".$table_prod."
+            <table width='800px;'>
+            <tr><td style='height:50px;background:#323BC2;color:white;text-align: left;font-family: Bahnschrift;padding: 5px;box-shadow:-4px -3px 9px 2px whitesmoke inset;'>miniERP - ".date('Y')."</td></tr>
+            </table>";
+                     send_mail($Q[0]->email,"miniErp - Zamówienie wysłane : ".$Q[0]->order_ident,$BodyEmail);
+
+                     $DeliveryModel = new Delivery;
+                     $create_package = $DeliveryModel->add_package($orderId);
+                 }
+                 else
+                 {
+                     $BodyEmail = "<table width='800px;'>
+            <tr><td style='background:#f2f2f2;box-shadow:3px 7px 5px 4px lightgray inset; text-align: center;font-size: 25px;text-align: center;font-family: Bahnschrift;'>miniERP System</td></tr>
+            <tr><td style='text-align: center;font-family: Bahnschrift;background: white;height: 150px;font-size: 19px;padding-right: 40px;padding-left: 40px;'>Państwa zamówienie (".$Q[0]->order_ident.") zmieniło status na: Gotowe do odbioru / The new status of your order (".$Q[0]->order_ident.") is: Ready to pick up</td></tr>
+            </table>
+                ".$table_prod."
+            <table width='800px;'>
+            <tr><td style='height:50px;background:#323BC2;color:white;text-align: left;font-family: Bahnschrift;padding: 5px;box-shadow:-4px -3px 9px 2px whitesmoke inset;'>miniERP - ".date('Y')."</td></tr>
+            </table>";
+                     send_mail($Q[0]->email,"miniErp - Zamówienie gotowe do odbioru : ".$Q[0]->order_ident,$BodyEmail);
+                 }
+                   break;
+           }
+       }
 
         DB::table('orders')->where(['order_id'=>$orderId])->update($insert_data);
     }
