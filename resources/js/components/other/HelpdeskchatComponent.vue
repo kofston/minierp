@@ -13,10 +13,13 @@
                         <div class="messages_container">
                         <div id="discuss"></div>
                         </div>
-                        <div>
+                        <div v-if="this.helpdesk_status == 1">
                             <label>Napisz wiadomość</label>
                             <textarea class="form-control message_text"></textarea>
                             <a href="javascript:void(0);" class="btn btn-primary d-block text-white mt-2" id="add_message" :data-helpdesk="helpdesk_id">Wyślij wiadomość / Send message</a>
+                        </div>
+                        <div v-if="this.helpdesk_status == 0">
+                            <div class="alert alert-danger">Dyskusja do zamówienia została wstrzymana / zakończona.</div>
                         </div>
                     </div>
                 </div>
@@ -32,6 +35,7 @@ export default {
         return {
             helpdesk_id:'',
             order_ident:'',
+            helpdesk_status:1,
         }
     },
     props: {
@@ -80,6 +84,7 @@ export default {
         {
             this.helpdesk_id = parseQuery[0].helpdesk_id;
             this.order_ident = parseQuery[0].order_ident;
+            this.helpdesk_status = parseQuery[0].helpdesk_status;
         }
     },
     mounted() {

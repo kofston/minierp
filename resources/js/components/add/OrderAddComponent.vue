@@ -42,6 +42,10 @@
                                             </table>
                                         </div>
                                         <div class="col-md-12">
+                                            <label>Rabat<input id="rabate_input" readonly v-model="client_rabate" class="form-control"><a id="do_rabate" href="javascript:void(0);">ZASTOSUJ</a></label>
+
+                                        </div>
+                                        <div class="col-md-12">
                                             <label>Dostawa</label>
                                             <select name="delivery" id="delivery" class="form-control " required>
                                             </select>
@@ -64,6 +68,8 @@
 </template>
 
 <script>
+import {isNumber} from "lodash";
+
 export default {
     name: "OrderAddComponent",
     data() {
@@ -77,6 +83,7 @@ export default {
             delivery_id:'',
             order_date:'',
             delivery_options:'',
+            client_rabate:'',
         }
     },
     props: {
@@ -101,6 +108,23 @@ export default {
                 else
                     alert("Nie posiadasz żadnych produktów w zamówieniu!");
             });
+            $("#do_rabate").unbind().click(function (){
+                let rabate_val = $("#rabate_input").val();
+                if(rabate_val>0)
+                {
+                    $( ".prc_inp" ).each(function( index ) {
+                        let prc = $(this).val();
+                        if(isNumber(parseFloat($(this).val())))
+                        {
+                            var new_prc = parseFloat(prc);
+                            $(this).val((new_prc - ((new_prc*parseFloat(rabate_val))/100)).toFixed(2));
+                        }
+                    });
+                    alert("Zastosowano rabat!");
+                }
+                else
+                    alert("Klient nie ma zdefiniowanego rabatu!");
+            });
         }
     },
     beforeMount() {
@@ -116,6 +140,7 @@ export default {
             this.client_id = parseQuery[0].client_id;
             this.delivery_id = parseQuery[0].delivery_id;
             this.order_date = parseQuery[0].order_date;
+            this.client_rabate = parseQuery[0].rabate;
 
 
             // console.log(prod_list.id.length);
@@ -137,7 +162,7 @@ export default {
                             FullProdList+="<td><input class='form-control form-control-sm' type='number' step='1' min='1' placeholder='Wpisz ilość' name='PRODUCT[qty][]' value='"+prod_list[pls][i]+"' /></td>";
                             break;
                         case 3:
-                            FullProdList+="<td><input class='form-control form-control-sm' type='number' step='0.01' min='0.01' placeholder='Wpisz cenę (zł)' name='PRODUCT[price][]' value='"+prod_list[pls][i]+"' /></td><td><a href='javascript:void(0)' class='redtext' onclick='$(this).closest(`tr`).remove();'>✖</a></td>";
+                            FullProdList+="<td><input class='form-control form-control-sm prc_inp' type='number' step='0.01' min='0.01' placeholder='Wpisz cenę (zł)' name='PRODUCT[price][]' value='"+prod_list[pls][i]+"' /></td><td><a href='javascript:void(0)' class='redtext' onclick='$(this).closest(`tr`).remove();'>✖</a></td>";
                             break;
                     }
                     hpl++;
@@ -170,7 +195,7 @@ export default {
         $(".prod_table").html("<tr><th>Nazwa</th><th>Ilość</th><th>Cena</th><th>Opcje</th></tr>"+this.products_list);
         $("#add_btn").unbind().click(function (){
             let prod_id = $("#product").val(),prod_text = $("#product").text(),prod_price = $("#product option:selected").data("price");
-            $(".prod_table").append("<tr class='product_in_table'><td><input type='hidden' readonly name='PRODUCT[id][]' value='"+prod_id+"' /><input class='form-control form-control-sm' type='text' readonly name='PRODUCT[name][]' value='"+prod_text+"' /></td><td><input class='form-control form-control-sm' type='number' step='1' min='1' placeholder='Wpisz ilość' name='PRODUCT[qty][]' value='1' /></td><td><input class='form-control form-control-sm' type='number' step='0.01' min='0.01' placeholder='Wpisz cenę (zł)' name='PRODUCT[price][]' value='"+prod_price+"' /></td><td><a href='javascript:void(0)' class='redtext' onclick='$(this).closest(`tr`).remove();'>✖</a></td></tr>");
+            $(".prod_table").append("<tr class='product_in_table'><td><input type='hidden' readonly name='PRODUCT[id][]' value='"+prod_id+"' /><input class='form-control form-control-sm' type='text' readonly name='PRODUCT[name][]' value='"+prod_text+"' /></td><td><input class='form-control form-control-sm' type='number' step='1' min='1' placeholder='Wpisz ilość' name='PRODUCT[qty][]' value='1' /></td><td><input class='form-control form-control-sm prc_inp' type='number' step='0.01' min='0.01' placeholder='Wpisz cenę (zł)' name='PRODUCT[price][]' value='"+prod_price+"' /></td><td><a href='javascript:void(0)' class='redtext' onclick='$(this).closest(`tr`).remove();'>✖</a></td></tr>");
         });
         $(document).ready(function() {
             $('.select2').select2();

@@ -5685,6 +5685,7 @@ __webpack_require__.r(__webpack_exports__);
           }],
           "drawCallback": function drawCallback(settings) {
             that.initDelete();
+            that.discussStatus();
             $(function () {
               $('[data-toggle="tooltip"]').tooltip();
             });
@@ -5707,10 +5708,25 @@ __webpack_require__.r(__webpack_exports__);
           });
         }
       });
+    },
+    discussStatus: function discussStatus() {
+      $(".discuss_change").unbind().change(function () {
+        var ident = $(this).data("ident"),
+            newStatus = $(this).val();
+        $.ajax({
+          url: "/helpdesk/change_status/" + ident + "/" + newStatus,
+          method: "POST",
+          success: function success(xhr) {
+            alert("Status dyskusji został zmieniony, a klient został o tym poinformowany");
+            $(".dTable").DataTable().ajax.reload();
+          }
+        });
+      });
     }
   },
   mounted: function mounted() {
     this.syncDataBase();
+    this.discussStatus();
   }
 });
 
@@ -6129,6 +6145,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -6194,6 +6212,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "OrderAddComponent",
   data: function data() {
@@ -6206,7 +6229,8 @@ __webpack_require__.r(__webpack_exports__);
       products_list: '',
       delivery_id: '',
       order_date: '',
-      delivery_options: ''
+      delivery_options: '',
+      client_rabate: ''
     };
   },
   props: {
@@ -6228,6 +6252,21 @@ __webpack_require__.r(__webpack_exports__);
       $(".save_order").unbind().click(function () {
         if ($(".prod_table tr").length > 1) $("#Send_form").click();else alert("Nie posiadasz żadnych produktów w zamówieniu!");
       });
+      $("#do_rabate").unbind().click(function () {
+        var rabate_val = $("#rabate_input").val();
+
+        if (rabate_val > 0) {
+          $(".prc_inp").each(function (index) {
+            var prc = $(this).val();
+
+            if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNumber)(parseFloat($(this).val()))) {
+              var new_prc = parseFloat(prc);
+              $(this).val((new_prc - new_prc * parseFloat(rabate_val) / 100).toFixed(2));
+            }
+          });
+          alert("Zastosowano rabat!");
+        } else alert("Klient nie ma zdefiniowanego rabatu!");
+      });
     }
   },
   beforeMount: function beforeMount() {
@@ -6242,7 +6281,8 @@ __webpack_require__.r(__webpack_exports__);
       this.order_ident = parseQuery[0].order_ident;
       this.client_id = parseQuery[0].client_id;
       this.delivery_id = parseQuery[0].delivery_id;
-      this.order_date = parseQuery[0].order_date; // console.log(prod_list.id.length);
+      this.order_date = parseQuery[0].order_date;
+      this.client_rabate = parseQuery[0].rabate; // console.log(prod_list.id.length);
 
       for (var i = 0; i < prod_list.id.length; i++) {
         FullProdList += "<tr class='product_in_table'>";
@@ -6265,7 +6305,7 @@ __webpack_require__.r(__webpack_exports__);
               break;
 
             case 3:
-              FullProdList += "<td><input class='form-control form-control-sm' type='number' step='0.01' min='0.01' placeholder='Wpisz cenę (zł)' name='PRODUCT[price][]' value='" + prod_list[pls][i] + "' /></td><td><a href='javascript:void(0)' class='redtext' onclick='$(this).closest(`tr`).remove();'>✖</a></td>";
+              FullProdList += "<td><input class='form-control form-control-sm prc_inp' type='number' step='0.01' min='0.01' placeholder='Wpisz cenę (zł)' name='PRODUCT[price][]' value='" + prod_list[pls][i] + "' /></td><td><a href='javascript:void(0)' class='redtext' onclick='$(this).closest(`tr`).remove();'>✖</a></td>";
               break;
           }
 
@@ -6302,7 +6342,7 @@ __webpack_require__.r(__webpack_exports__);
       var prod_id = $("#product").val(),
           prod_text = $("#product").text(),
           prod_price = $("#product option:selected").data("price");
-      $(".prod_table").append("<tr class='product_in_table'><td><input type='hidden' readonly name='PRODUCT[id][]' value='" + prod_id + "' /><input class='form-control form-control-sm' type='text' readonly name='PRODUCT[name][]' value='" + prod_text + "' /></td><td><input class='form-control form-control-sm' type='number' step='1' min='1' placeholder='Wpisz ilość' name='PRODUCT[qty][]' value='1' /></td><td><input class='form-control form-control-sm' type='number' step='0.01' min='0.01' placeholder='Wpisz cenę (zł)' name='PRODUCT[price][]' value='" + prod_price + "' /></td><td><a href='javascript:void(0)' class='redtext' onclick='$(this).closest(`tr`).remove();'>✖</a></td></tr>");
+      $(".prod_table").append("<tr class='product_in_table'><td><input type='hidden' readonly name='PRODUCT[id][]' value='" + prod_id + "' /><input class='form-control form-control-sm' type='text' readonly name='PRODUCT[name][]' value='" + prod_text + "' /></td><td><input class='form-control form-control-sm' type='number' step='1' min='1' placeholder='Wpisz ilość' name='PRODUCT[qty][]' value='1' /></td><td><input class='form-control form-control-sm prc_inp' type='number' step='0.01' min='0.01' placeholder='Wpisz cenę (zł)' name='PRODUCT[price][]' value='" + prod_price + "' /></td><td><a href='javascript:void(0)' class='redtext' onclick='$(this).closest(`tr`).remove();'>✖</a></td></tr>");
     });
     $(document).ready(function () {
       $('.select2').select2();
@@ -6443,12 +6483,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "HelpdeskchatComponent",
   data: function data() {
     return {
       helpdesk_id: '',
-      order_ident: ''
+      order_ident: '',
+      helpdesk_status: 1
     };
   },
   props: {
@@ -6497,6 +6541,7 @@ __webpack_require__.r(__webpack_exports__);
     if (parseQuery.length > 0) {
       this.helpdesk_id = parseQuery[0].helpdesk_id;
       this.order_ident = parseQuery[0].order_ident;
+      this.helpdesk_status = parseQuery[0].helpdesk_status;
     }
   },
   mounted: function mounted() {
@@ -71438,6 +71483,43 @@ var render = function () {
                       _vm._v(" "),
                       _vm._m(2),
                       _vm._v(" "),
+                      _c("div", { staticClass: "col-md-12" }, [
+                        _c("label", [
+                          _vm._v("Rabat"),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.client_rabate,
+                                expression: "client_rabate",
+                              },
+                            ],
+                            staticClass: "form-control",
+                            attrs: { id: "rabate_input", readonly: "" },
+                            domProps: { value: _vm.client_rabate },
+                            on: {
+                              input: function ($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.client_rabate = $event.target.value
+                              },
+                            },
+                          }),
+                          _c(
+                            "a",
+                            {
+                              attrs: {
+                                id: "do_rabate",
+                                href: "javascript:void(0);",
+                              },
+                            },
+                            [_vm._v("ZASTOSUJ")]
+                          ),
+                        ]),
+                      ]),
+                      _vm._v(" "),
                       _vm._m(3),
                     ]),
                     _vm._v(" "),
@@ -71819,24 +71901,36 @@ var render = function () {
             _vm._v(" "),
             _vm._m(0),
             _vm._v(" "),
-            _c("div", [
-              _c("label", [_vm._v("Napisz wiadomość")]),
-              _vm._v(" "),
-              _c("textarea", { staticClass: "form-control message_text" }),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  staticClass: "btn btn-primary d-block text-white mt-2",
-                  attrs: {
-                    href: "javascript:void(0);",
-                    id: "add_message",
-                    "data-helpdesk": _vm.helpdesk_id,
-                  },
-                },
-                [_vm._v("Wyślij wiadomość / Send message")]
-              ),
-            ]),
+            this.helpdesk_status == 1
+              ? _c("div", [
+                  _c("label", [_vm._v("Napisz wiadomość")]),
+                  _vm._v(" "),
+                  _c("textarea", { staticClass: "form-control message_text" }),
+                  _vm._v(" "),
+                  _c(
+                    "a",
+                    {
+                      staticClass: "btn btn-primary d-block text-white mt-2",
+                      attrs: {
+                        href: "javascript:void(0);",
+                        id: "add_message",
+                        "data-helpdesk": _vm.helpdesk_id,
+                      },
+                    },
+                    [_vm._v("Wyślij wiadomość / Send message")]
+                  ),
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            this.helpdesk_status == 0
+              ? _c("div", [
+                  _c("div", { staticClass: "alert alert-danger" }, [
+                    _vm._v(
+                      "Dyskusja do zamówienia została wstrzymana / zakończona."
+                    ),
+                  ]),
+                ])
+              : _vm._e(),
           ]),
         ]),
       ]),

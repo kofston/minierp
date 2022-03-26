@@ -50,6 +50,7 @@ export default {
                     "columnDefs": [{ "targets": [], "orderable": false, }],
                     "drawCallback": function( settings ) {
                         that.initDelete();
+                        that.discussStatus();
                         $(function () {
                             $('[data-toggle="tooltip"]').tooltip()
                         })
@@ -72,10 +73,25 @@ export default {
                     })
                 }
             });
+        },
+        discussStatus()
+        {
+            $( ".discuss_change" ).unbind().change(function() {
+                let ident = $(this).data("ident"),newStatus = $(this).val();
+                $.ajax({
+                    url: "/helpdesk/change_status/"+ident+"/"+newStatus,
+                    method:"POST",
+                    success: function( xhr ) {
+                        alert("Status dyskusji został zmieniony, a klient został o tym poinformowany");
+                        $(".dTable").DataTable().ajax.reload();
+                    }
+                });
+            });
         }
     },
     mounted() {
         this.syncDataBase();
+        this.discussStatus();
     }
 
 }

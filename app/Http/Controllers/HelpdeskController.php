@@ -55,16 +55,16 @@ class HelpdeskController extends Controller
 
         foreach($query as $qry)
         {
-            $discuss_class = "discuss open";
+            $discuss_class = "discuss discuss_change open";
             if($qry->helpdesk_status=="0")
-                $discuss_class = "discuss close";
+                $discuss_class = "discuss discuss_change close";
 
             $row_id = $qry->helpdesk_id;
             $row = array("DT_RowId"=>'helpdesk_'.$row_id, 'DT_RowClass'=>'helpdesk_tr');
             $row[] = $j++;
-            $row[] = 'Zgł do zam: '.$qry->order_ident;
+            $row[] = 'Zgł do zam: '.'<a target="_blank" href="/order/add/'.$qry->order_id.'"><u>'.$qry->order_ident.'</u></a>';
             $row[] = $qry->c_date;
-            $row[] = '<select style="max-width:80px;" class="form-control '.$discuss_class.'"><option value="0" '.(($qry->helpdesk_status=="0")?'selected':'').'>Zakończona</option><option value="1" '.(($qry->helpdesk_status=="1")?'selected':'').'>Otwarta</option></select>';
+            $row[] = '<select style="max-width:80px;" class="form-control '.$discuss_class.'" data-ident="'.$row_id.'"><option value="0" '.(($qry->helpdesk_status=="0")?'selected':'').'>Zakończona</option><option value="1" '.(($qry->helpdesk_status=="1")?'selected':'').'>Otwarta</option></select>';
             $row[] = '<ul><li><a title="Edytuj" href="/helpdesk/chat/'.$row_id.'/'.md5($row_id.$qry->c_date.$qry->order_id.str_replace(array(1,2,3,4,5,6),array(9,5,2,8,4,3),$qry->c_date)).'">&#9998;</a></li></ul>';
 
             $data[] = $row;
@@ -78,6 +78,52 @@ class HelpdeskController extends Controller
 
         echo json_encode($output);
 
+    }
+    public function change_status($id=NULL,$newStatus=0)
+    {
+        if(isset($id))
+        {
+            $insert_data = array(
+                'e_date'=>date('Y-m-d H:i:s'),
+                'e_by'=>((Auth::id())?Auth::id():'0'),
+                'helpdesk_status'=>(string)$newStatus,
+            );
+            $QHLP = DB::table('helpdesk')->where(['helpdesk_id'=>$id])->get();
+            if(count($QHLP)>0)
+            {
+                $Q = DB::table('orders')->select('orders.order_id','orders.order_ident','orders.products','client.*')->leftJoin('client', 'orders.client_id', '=', 'client.client_id')->where(['orders.status'=>'1','order_id'=>$QHLP[0]->order_id])->get();
+                if(count($Q)>0)
+                {
+                    DB::table('helpdesk')->where(['helpdesk_id'=>$id])->update($insert_data);
+                    if($newStatus=="1")
+                    {
+                        $BodyEmail = "<table width='800px;'>
+            <tr><td style='background:#f2f2f2;box-shadow:3px 7px 5px 4px lightgray inset; text-align: center;font-size: 25px;text-align: center;font-family: Bahnschrift;'>miniERP System</td></tr>
+            <tr><td style='text-align: center;font-family: Bahnschrift;background: white;height: 150px;font-size: 19px;padding-right: 40px;padding-left: 40px;'>Rozpoczęto / Wznowiono Państwa dyskusję do zamówienia: ".$Q[0]->order_ident."<br><br>Dyskusja dostępna pod następującym linkiem: <a href='http://127.0.0.1:8000/helpdesk/chat/".$QHLP[0]->helpdesk_id."/".md5($QHLP[0]->helpdesk_id.$QHLP[0]->c_date.$QHLP[0]->order_id.str_replace(array(1,2,3,4,5,6),array(9,5,2,8,4,3),$QHLP[0]->c_date))."'>Przejdź do dyskusji</a></td></tr>
+            </table>
+            <table width='800px;'>
+            <tr><td style='height:50px;background:#323BC2;color:white;text-align: left;font-family: Bahnschrift;padding: 5px;box-shadow:-4px -3px 9px 2px whitesmoke inset;'>miniERP - ".date('Y')."</td></tr>
+            </table>";
+
+              send_mail($Q[0]->email,"miniErp - (Otwarto/Wznowiono) Dyskusję do zamówienia ".$Q[0]->order_ident,$BodyEmail);
+                    }
+                    else
+                    {
+                        $BodyEmail = "<table width='800px;'>
+            <tr><td style='background:#f2f2f2;box-shadow:3px 7px 5px 4px lightgray inset; text-align: center;font-size: 25px;text-align: center;font-family: Bahnschrift;'>miniERP System</td></tr>
+            <tr><td style='text-align: center;font-family: Bahnschrift;background: white;height: 150px;font-size: 19px;padding-right: 40px;padding-left: 40px;'>Zamknięto Państwa dyskusję do zamówienia: ".$Q[0]->order_ident."<br><br>Dyskusja dostępna pod następującym linkiem: <a href='http://127.0.0.1:8000/helpdesk/chat/".$QHLP[0]->helpdesk_id."/".md5($QHLP[0]->helpdesk_id.$QHLP[0]->c_date.$QHLP[0]->order_id.str_replace(array(1,2,3,4,5,6),array(9,5,2,8,4,3),$QHLP[0]->c_date))."'>Przejdź do dyskusji</a></td></tr>
+            </table>
+            <table width='800px;'>
+            <tr><td style='height:50px;background:#323BC2;color:white;text-align: left;font-family: Bahnschrift;padding: 5px;box-shadow:-4px -3px 9px 2px whitesmoke inset;'>miniERP - ".date('Y')."</td></tr>
+            </table>";
+
+                        send_mail($Q[0]->email,"miniErp - (Zamknięto) Dyskusję do zamówienia ".$Q[0]->order_ident,$BodyEmail);
+                    }
+                }
+                else
+                    return 0;
+            }
+        }
     }
     public function refresh_chat($id=NULL)
     {

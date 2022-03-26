@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    public $column_search = array('orders.order_id','orders.order_ident','orders.c_date','orders.e_date','orders.order_status');
+    public $column_search = array('orders.order_id','orders.order_ident','orders.c_date','orders.e_date','orders.order_status','client.name');
     public $column_order = array('orders.order_id','orders.order_ident','orders.c_date','orders.e_date');
     public $order = array('orders.c_date' => 'desc');
 
     function get_details($id)
     {
         if(!is_null($id))
-            $query = DB::table('orders')->where(['status'=>'1','order_id'=>$id])->get();
+            $query = DB::table('orders')->select('orders.*','client.client_id','client.rabate')->leftJoin('client', 'orders.client_id', '=', 'client.client_id')->where(['orders.status'=>'1','order_id'=>$id])->get();
         else
             $query = array();
 
@@ -23,7 +23,7 @@ class Order extends Model
     function _get_datatables_query()
     {
         $request = Request::instance();
-        $query = DB::table('orders')->where(['status'=>'1']);
+        $query = DB::table('orders')->select('orders.*','client.client_id','client.name')->leftJoin('client', 'orders.client_id', '=', 'client.client_id')->where(['orders.status'=>'1']);
 //        ## SEARCH DATATABLE
         $search = $request->post('search');
         $i = 0;

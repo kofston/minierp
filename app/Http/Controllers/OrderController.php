@@ -90,7 +90,7 @@ class OrderController extends Controller
             $row_id = $qry->order_id;
             $row = array("DT_RowId"=>'order_'.$row_id, 'DT_RowClass'=>'order_tr');
             $row[] = $j++;
-            $row[] = '<div class="strongLabel" ><a href="/order/add/'.$row_id.'">'.$qry->order_ident.'</a></div>';
+            $row[] = '<div class="strongLabel" ><a href="/order/add/'.$row_id.'">'.$qry->order_ident.'</a></div><small><a target="_blank" href="/client/add/'.$qry->client_id.'"><u>'.$qry->name.'</u></a></small>';
             $row[] = '<ul class="m-0" style="font-size: 14px;display: block;list-style: disc;">'.$product_list.'</ul>';
             $row[] = $qry->c_date;
             $row[] = (($qry->e_date!='0000-00-00 00:00:00')?$qry->e_date:'-');
@@ -111,7 +111,7 @@ class OrderController extends Controller
     public function changeStatus($orderId=NULL,$newStatus=NULL)
     {
         $insert_data = array(
-            'c_date'=>date('Y-m-d H:i:s'),
+            'e_date'=>date('Y-m-d H:i:s'),
             'e_by'=>((Auth::id())?Auth::id():'0'),
             'order_status'=>(string)$newStatus,
         );
