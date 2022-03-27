@@ -33,6 +33,30 @@ export default {
 
         }
     },
+    methods:{
+        syncDataBase(){
+            let that = this;
+            $(document).ready( function () {
+                $('.dTable').DataTable({
+                    "processing": true,
+                    "serverSide": true,
+                    "order": [],
+                    "aLengthMenu": [[15, 25, 50], [15, 25, 50]],
+                    "iDisplayLength": 15,
+                    "ajax": {
+                        "url": "/note/get_list",
+                        "type": "POST"
+                    },
+                    "columnDefs": [{ "targets": [], "orderable": false, }],
+                    "drawCallback": function( settings ) {
+                    },
+                });
+            } );
+        },
+    },
+    mounted() {
+        this.syncDataBase();
+    }
 }
 </script>
 

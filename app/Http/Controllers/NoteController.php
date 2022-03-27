@@ -37,13 +37,41 @@ class NoteController extends Controller
 
         foreach($query as $qry)
         {
+            $Get_user_detail = DB::table('users')->where(['id'=>$qry->c_by])->get();
+            $user_detail = '-';
+            if(isset($Get_user_detail[0]))
+                $user_detail = $Get_user_detail[0]->name;
+
+            $mdl = 'black';
+            switch ($qry->module)
+            {
+                case 'client':
+                    $mdl = 'blue';
+                    break;
+                case 'order':
+                    $mdl = 'red';
+                    break;
+                case 'product':
+                    $mdl = 'orange';
+                    break;
+                case 'delivery':
+                    $mdl = 'purple';
+                    break;
+                case 'helpdesk':
+                    $mdl = 'pink';
+                    break;
+                case 'offer':
+                    $mdl = 'green';
+                    break;
+            }
+
             $row_id = $qry->note_id;
             $row = array("DT_RowId"=>'helpdesk_'.$row_id, 'DT_RowClass'=>'helpdesk_tr');
             $row[] = $j++;
             $row[] = $qry->event;
-            $row[] = $qry->module;
+            $row[] = '<span style="color: '.$mdl.'!important">'.$qry->module.'</span>';
             $row[] = $qry->c_date;
-            $row[] = $qry->c_by;
+            $row[] = $user_detail;
 
             $data[] = $row;
         }
