@@ -38,6 +38,15 @@ Route::post('/order/get_list', [App\Http\Controllers\OrderController::class, 'ge
 Route::get('/order/add/{id?}', [App\Http\Controllers\OrderController::class, 'add'])->name('order/add');
 Route::post('/order/save/{id?}', [App\Http\Controllers\OrderController::class, 'save'])->name('order/save');
 Route::post('/order/changeStatus/{id}/{status}', [App\Http\Controllers\OrderController::class, 'changeStatus'])->name('order/changeStatus');
+Route::get('/order/loadingChart', [App\Http\Controllers\OrderController::class, 'loadingChart'])->name('loadingChart');
+
+Route::get('/offer', [App\Http\Controllers\OfferController::class, 'index'])->name('offer');
+Route::post('/offer/get_list', [App\Http\Controllers\OfferController::class, 'get_list'])->name('offer/get_list');
+Route::get('/offer/add/{id?}', [App\Http\Controllers\OfferController::class, 'add'])->name('offer/add');
+Route::post('/offer/save/{id?}', [App\Http\Controllers\OfferController::class, 'save'])->name('offer/save');
+Route::get('/offer/send/{id}', [App\Http\Controllers\OfferController::class, 'send'])->name('offer/send');
+Route::get('/offer/delete/{id?}', [App\Http\Controllers\OfferController::class, 'delete'])->name('offer/delete');
+
 
 Route::get('/delivery', [App\Http\Controllers\DeliveryController::class, 'index'])->name('delivery');
 Route::post('/delivery/get_list', [App\Http\Controllers\DeliveryController::class, 'get_list'])->name('delivery/get_list');
@@ -56,3 +65,6 @@ Route::post('/helpdesk/change_status/{id}/{status}', [App\Http\Controllers\Helpd
 
 Route::get('/offer', [App\Http\Controllers\OfferController::class, 'index'])->name('offer');
 Route::post('/offer/get_list', [App\Http\Controllers\OfferController::class, 'get_list'])->name('offer/get_list');
+
+Route::get('/note', [App\Http\Controllers\NoteController::class, 'index'])->name('note');
+Route::post('/note/get_list', [App\Http\Controllers\NoteController::class, 'get_list'])->name('note/get_list');

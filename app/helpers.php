@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
@@ -41,6 +42,7 @@ if (!function_exists('send_mail')) {
             //Recipients
             $mail->setFrom('from@example.com', 'miniERP - Praca Magisterska');
             $mail->addAddress($to, 'Joe User');     // Add a recipient
+            $mail->addAttachment('uploads/invoices/Invoice.pdf');
 
             // Content
             $mail->Subject = $thema;
@@ -54,5 +56,18 @@ if (!function_exists('send_mail')) {
         } catch (Exception $e) {
             echo 'error';
         }
+    }
+}
+if (!function_exists('log_event')) {
+    function log_event($module,$text)
+    {
+        $insert_data = array(
+            'event'=>$text,
+            'module'=>$module,
+            'c_date'=>date('Y-m-d H:i:s'),
+            'c_by'=>((Auth::id())?Auth::id():'0'),
+            'status'=>'1',
+        );
+        DB::table('note')->insert($insert_data);
     }
 }

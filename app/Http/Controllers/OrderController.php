@@ -55,6 +55,7 @@ class OrderController extends Controller
         {
             $insert_data['e_date'] = date('Y-m-d H:i:s');
             DB::table('orders')->where(['order_id'=>$id])->update($insert_data);
+            log_event('order','Edycja zamówienia (id'.$id.')');
             return redirect('/order?msg=success_updated');
         }
         else
@@ -63,6 +64,7 @@ class OrderController extends Controller
             $count_all = DB::table('orders')->count();
             $insert_data['order_ident'] = 'ZA/'.($count_all+1).'/'.date('m/Y');
             DB::table('orders')->insert($insert_data);
+            log_event('order','Dodanie zamówienia zamówienia (ident '.$insert_data['order_ident'].')');
             return redirect('/order?msg=success_insert');
         }
 
@@ -148,6 +150,16 @@ class OrderController extends Controller
 
            switch ($newStatus){
                case -1:
+                   $BodyEmail = "<table width='800px;'>
+            <tr><td style='background:#f2f2f2;box-shadow:3px 7px 5px 4px lightgray inset; text-align: center;font-size: 25px;text-align: center;font-family: Bahnschrift;'>miniERP System</td></tr>
+            <tr><td style='text-align: center;font-family: Bahnschrift;background: white;height: 150px;font-size: 19px;padding-right: 40px;padding-left: 40px;'>Państwa zamówienie (".$Q[0]->order_ident.") zmieniło status na: Anulowane / The new status of your order (".$Q[0]->order_ident.") is: Cancelled</td></tr>
+            </table>
+               ".$table_prod."
+            <table width='800px;'>
+            <tr><td style='height:50px;background:#323BC2;color:white;text-align: left;font-family: Bahnschrift;padding: 5px;box-shadow:-4px -3px 9px 2px whitesmoke inset;'>miniERP - ".date('Y')."</td></tr>
+            </table>";
+                   send_mail($Q[0]->email,"miniErp - Zamówienie zostało Anulowane : ".$Q[0]->order_ident,$BodyEmail);
+                   log_event('order','(ZMIANA STATUSU) Anulowanie zamówienia (ident '.$Q[0]->order_ident.')');
                    break;
                case 1:
                    $BodyEmail = "<table width='800px;'>
@@ -158,7 +170,12 @@ class OrderController extends Controller
             <table width='800px;'>
             <tr><td style='height:50px;background:#323BC2;color:white;text-align: left;font-family: Bahnschrift;padding: 5px;box-shadow:-4px -3px 9px 2px whitesmoke inset;'>miniERP - ".date('Y')."</td></tr>
             </table>";
-                send_mail($Q[0]->email,"miniErp - Nowe zamówienie : ".$Q[0]->order_ident,$BodyEmail);
+
+                   $OrderModel = new Order;
+                   $PDF = $OrderModel->generate_pdf($Q[0]->order_id);
+
+                send_mail($Q[0]->email,"miniErp - Nowe zamówienie : ".$Q[0]->order_ident,$BodyEmail,1);
+                   log_event('order','(ZMIANA STATUSU) Nowe zamówienie (ident '.$Q[0]->order_ident.')');
                    break;
                case 2:
                    $BodyEmail = "<table width='800px;'>
@@ -170,6 +187,7 @@ class OrderController extends Controller
             <tr><td style='height:50px;background:#323BC2;color:white;text-align: left;font-family: Bahnschrift;padding: 5px;box-shadow:-4px -3px 9px 2px whitesmoke inset;'>miniERP - ".date('Y')."</td></tr>
             </table>";
                    send_mail($Q[0]->email,"miniErp - Zamówienie przekazane do realizacji : ".$Q[0]->order_ident,$BodyEmail);
+                   log_event('order','(ZMIANA STATUSU) Przyj. do realiz. (ident '.$Q[0]->order_ident.')');
                    break;
                case 3:
                  if($Q[0]->deliver_id>0)
@@ -182,6 +200,7 @@ class OrderController extends Controller
             <table width='800px;'>
             <tr><td style='height:50px;background:#323BC2;color:white;text-align: left;font-family: Bahnschrift;padding: 5px;box-shadow:-4px -3px 9px 2px whitesmoke inset;'>miniERP - ".date('Y')."</td></tr>
             </table>";
+                     log_event('order','(ZMIANA STATUSU) Wysłanie zamówienia (ident '.$Q[0]->order_ident.')');
                      send_mail($Q[0]->email,"miniErp - Zamówienie wysłane : ".$Q[0]->order_ident,$BodyEmail);
 
                      $DeliveryModel = new Delivery;
@@ -197,6 +216,7 @@ class OrderController extends Controller
             <table width='800px;'>
             <tr><td style='height:50px;background:#323BC2;color:white;text-align: left;font-family: Bahnschrift;padding: 5px;box-shadow:-4px -3px 9px 2px whitesmoke inset;'>miniERP - ".date('Y')."</td></tr>
             </table>";
+                     log_event('order','(ZMIANA STATUSU) Gotowe do odbioru (ident '.$Q[0]->order_ident.')');
                      send_mail($Q[0]->email,"miniErp - Zamówienie gotowe do odbioru : ".$Q[0]->order_ident,$BodyEmail);
                  }
                    break;
@@ -205,21 +225,23 @@ class OrderController extends Controller
 
         DB::table('orders')->where(['order_id'=>$orderId])->update($insert_data);
     }
-    public function pack_pdf($order_id=NULL)
+    public function loadingChart()
     {
-        $PDF = $this->generate_pdf($order_id);
-        if ($PDF != "" && $PDF != "error") {
-            $file = "uploads/files/attachments/" . $PDF;
-            if (file_exists($file)) {
-                $_SESSION['offer_selected']=array();
-                header("Content-type:application/pdf");
-                header('Content-Disposition: attachment; filename="' . basename($file) . '"');
-                readfile($file);
-                exit;
-            } else {
-                "Brak PLiku";
+        $Query = DB::table('orders')->where(['status'=>'1'])->get();
+        $data = array();
+        foreach ($Query as $qry)
+        {
+            $products = json_decode($qry->products);
+            $sum = 0;
+            foreach ($products as $prod_K=>$prod_V)
+            {
+                if($prod_K == 'price')
+                    foreach ($prod_V as $pv)
+                        $sum+=(float)$pv;
             }
+            array_push($data,array('year'=>$qry->order_date,'a'=>$sum));
         }
+        return json_encode($data);
     }
 
 }

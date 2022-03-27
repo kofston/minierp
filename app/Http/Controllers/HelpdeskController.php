@@ -38,6 +38,7 @@ class HelpdeskController extends Controller
                 'status'=>'1',
             );
             DB::table('helpdesk')->insert($insert_data);
+            log_event('helpdesk','Stworzenie zgłoszenia (order-id: '.$orderid.')');
         }
         return redirect('/helpdesk');
     }
@@ -105,7 +106,8 @@ class HelpdeskController extends Controller
             <tr><td style='height:50px;background:#323BC2;color:white;text-align: left;font-family: Bahnschrift;padding: 5px;box-shadow:-4px -3px 9px 2px whitesmoke inset;'>miniERP - ".date('Y')."</td></tr>
             </table>";
 
-              send_mail($Q[0]->email,"miniErp - (Otwarto/Wznowiono) Dyskusję do zamówienia ".$Q[0]->order_ident,$BodyEmail);
+                        send_mail($Q[0]->email,"miniErp - (Otwarto/Wznowiono) Dyskusję do zamówienia ".$Q[0]->order_ident,$BodyEmail);
+                        log_event('helpdesk','Wznowienie dyskusji ('.$Q[0]->order_ident.')');
                     }
                     else
                     {
@@ -118,6 +120,7 @@ class HelpdeskController extends Controller
             </table>";
 
                         send_mail($Q[0]->email,"miniErp - (Zamknięto) Dyskusję do zamówienia ".$Q[0]->order_ident,$BodyEmail);
+                        log_event('helpdesk','Zamknięcie dyskusji ('.$Q[0]->order_ident.')');
                     }
                 }
                 else
@@ -164,14 +167,6 @@ class HelpdeskController extends Controller
             }
             else
                 echo 'Brak wiadomości';
-//            $insert_data = array(
-//                'helpdesk_id'=>$id,
-//                'message'=>$_POST['message'],
-//                'c_date'=>date('Y-m-d H:i:s'),
-//                'c_by'=>((Auth::id())?Auth::id():'0'),
-//                'status'=>'1',
-//            );
-//            DB::table('helpdesk_messages')->insert($insert_data);
         }
     }
     public function add_message($id=NULL)

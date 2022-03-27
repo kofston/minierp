@@ -37,6 +37,7 @@ class DeliveryController extends Controller
             )
         );
         try {
+            log_event('delivery','Usunięcie przesyłki ('.$deliveryNumb.')');
             $response = $DHL_OBJECT->__soapCall('deleteShipments', array($requestData));
         }
         catch (Exception $e)

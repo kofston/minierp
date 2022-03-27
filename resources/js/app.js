@@ -51,6 +51,9 @@ Vue.component('helpdeskchat-component', require('./components/other/Helpdeskchat
 
 
 Vue.component('offer-component', require('./components/OfferComponent.vue').default);
+Vue.component('offeradd-component', require('./components/add/OfferAddComponent.vue').default);
+
+Vue.component('note-component', require('./components/NoteComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

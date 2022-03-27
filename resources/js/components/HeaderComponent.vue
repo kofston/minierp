@@ -22,6 +22,9 @@
         <b-menu-list>
             <a href="/offer" class="p-0" title="Oferty"><b-menu-item icon="tag" label="Oferty"></b-menu-item></a>
         </b-menu-list>
+        <b-menu-list>
+            <a href="/note" class="p-0" title="Dziennik"><b-menu-item icon="edit" label="Dziennik"></b-menu-item></a>
+        </b-menu-list>
     </b-menu>
 </div>
 </template>

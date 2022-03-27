@@ -58,11 +58,13 @@ class ClientController extends Controller
         {
             $insert_data['e_date'] = date('Y-m-d H:i:s');
             DB::table('client')->where(['client_id'=>$id])->update($insert_data);
+            log_event('client','Edycja klienta ('.$_POST['name'].')');
             return redirect('/client?msg=success_updated');
         }
         else
         {
             DB::table('client')->insert($insert_data);
+            log_event('client','Dodanie nowego klienta ('.$_POST['name'].')');
             return redirect('/client?msg=success_insert');
         }
 
@@ -70,7 +72,10 @@ class ClientController extends Controller
     public function delete($id=NULL)
     {
         if(isset($id))
+        {
             DB::table('client')->where(['client_id'=>$id])->update(['status'=>'0','e_date'=>date('Y-m-d H:i:s'),'e_by'=>((Auth::id())?Auth::id():'0')]);
+            log_event('client','Usunięcie klienta (id:'.$id.')');
+        }
 
         if(file_exists('cache/clients.php'))
             unlink('cache/clients.php');

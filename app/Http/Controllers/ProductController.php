@@ -51,12 +51,14 @@ class ProductController extends Controller
         {
             $insert_data['e_date'] = date('Y-m-d H:i:s');
             DB::table('product')->where(['product_id'=>$id])->update($insert_data);
+            log_event('product','Edycja produktu ('.$_POST['name'].')');
             return redirect('/product?msg=success_updated');
         }
         else
         {
             $count_all = DB::table('product')->count();
             DB::table('product')->insert($insert_data);
+            log_event('product','Dodanie produktu ('.$_POST['name'].')');
             return redirect('/product?msg=success_insert');
         }
 
@@ -64,7 +66,10 @@ class ProductController extends Controller
     public function delete($id=NULL)
     {
         if(isset($id))
+        {
             DB::table('product')->where(['product_id'=>$id])->update(['status'=>'0','e_date'=>date('Y-m-d H:i:s'),'e_by'=>((Auth::id())?Auth::id():'0')]);
+            log_event('product','Usunięcie produktu (id: '.$id.')');
+        }
 
         if(file_exists('cache/products.php'))
             unlink('cache/products.php');

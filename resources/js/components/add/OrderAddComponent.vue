@@ -131,7 +131,7 @@ export default {
         var parseQuery =  JSON.parse(this.$props.query);
         var clientsarray = JSON.parse(this.$props.clientsarray);
         var productsarray = JSON.parse(this.$props.productsarray);
-        var prod_list = JSON.parse(parseQuery[0].products);
+        var prod_list = JSON.parse( ((parseQuery.length>0)?parseQuery[0].products:'[]') );
         var FullProdList = '';
         if(parseQuery.length>0)
         {

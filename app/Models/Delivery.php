@@ -79,6 +79,7 @@ class Delivery extends Model
 
                     try {
                         $response = $DHL_OBJECT->__soapCall('createShipments',array($requestData));
+                        log_event('delivery','Dodanie przesyłki ('.$qry->order_ident.')');
                     }
                     catch (Exception $e)
                     {

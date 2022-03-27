@@ -28,18 +28,31 @@ export default {
             donutTestName:'',
             donutTestDate:'',
             barData: [],
-            AreaData: [
-                { year: '0000-00-00',a: 0 },
-            ],
+            AreaData: [],
             xkey:"year",
             ykeys:'["a"]',
-            labels: '["Brak danych"]',
+            labels: '["Sprzedano za"]',
 
+        }
+    },
+    methods:{
+      loadingChart(){
+          let that = this;
+          $.ajax({
+              url: "/order/loadingChart",
+              method:"GET",
+              success: function( xhr ) {
+                 that.AreaData = xhr;
+              }
+          });
         }
     },
     components:{
         AreaChart,
     },
+    beforeMount() {
+        this.loadingChart();
+    }
 }
 </script>
 

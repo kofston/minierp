@@ -5,25 +5,16 @@ use DB;
 use Request;
 use Illuminate\Database\Eloquent\Model;
 
-class Offer extends Model
+class Note extends Model
 {
-    public $column_search = array('offer.offer_id','offer.message','offer.clients','offer.c_date','offer.offer_id');
-    public $column_order = array('offer.offer_id','offer.message','offer.clients','offer.c_date','offer.offer_id');
-    public $order = array('offer.c_date' => 'desc');
+    public $column_search = array('note.note_id','note.event','note.module','note.c_date','note.c_by');
+    public $column_order = array('note.note_id','note.event','note.module','note.c_date','note.c_by');
+    public $order = array('note.c_date' => 'desc');
 
-    function get_details($id)
-    {
-        if(!is_null($id))
-            $query = DB::table('offer')->where(['offer.status'=>'1','offer_id'=>$id])->get();
-        else
-            $query = array();
-
-        return $query;
-    }
     function _get_datatables_query()
     {
         $request = Request::instance();
-        $query = DB::table('offer')->where(['status'=>'1']);
+        $query = DB::table('note')->where(['status'=>'1']);
 //        ## SEARCH DATATABLE
         $search = $request->post('search');
         $i = 0;
@@ -71,7 +62,7 @@ class Offer extends Model
 
     public function count_all()
     {
-        $query = DB::table('offer')->where(['status'=>'1'])->count();
+        $query = DB::table('note')->where(['status'=>'1'])->count();
         return $query;
     }
 }
